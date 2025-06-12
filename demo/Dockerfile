@@ -1,12 +1,11 @@
 FROM maven:3.9.10-openjdk-21 AS build
 WORKDIR /add
-COPY pom.xml
+COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-
 FROM openjdk:21-jdk-slim
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /add/target/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
